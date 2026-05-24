@@ -1,1 +1,383 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>zzMuffins AMA</title>
+  <style>
+    body {
+      background-image: linear-gradient(rgba(0, 0, 0, 0.4), #000000), url('./background.jpg');
+      background-size: cover;
+      background-position: top center;
+      background-repeat: no-repeat;
+      background-attachment: fixed;
+      color: #e0e0e0;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      min-height: 100vh;
+      margin: 0;
+      padding: 40px 20px;
+      box-sizing: border-box;
+    }
+    /* --- Core Layout Wrapper --- */
+    .app-layout {
+      display: flex;
+      flex-direction: column;
+      gap: 40px;
+      width: 100%;
+      max-width: 1600px;
+      margin: 0 auto;
+    }
 
+    /* --- Left Column (Form Sidebar Container) --- */
+    .sidebar-container {
+      width: 100%;
+      box-sizing: border-box;
+    }
+
+    /* --- Invisible Form Wrapper --- */
+    .form-card {
+      background-color: transparent;
+      backdrop-filter: none;
+      -webkit-backdrop-filter: none;
+      border: none;
+      padding: 0;
+      box-sizing: border-box;
+      width: 100%;
+      margin-top: 40px;
+    }
+
+    h1 { font-size: 1.8rem; margin-bottom: 10px; font-weight: 600; }
+    p { color: #ababab; font-size: 0.95rem; margin-bottom: 20px; }
+    textarea {
+      width: 100%;
+      height: 100px;
+      min-height: 100px;
+      max-height: 300px;
+      background-color: rgba(5, 5, 5, 0.5);
+      border: 1px solid #232323;
+      border-radius: 8px;
+      color: #fff;
+      padding: 12px;
+      font-size: 1rem;
+      resize: vertical;
+      box-sizing: border-box;
+      outline: none;
+    }
+    button {
+      margin-top: 12px; width: 100%; background-color: #fff; color: #000;
+      border: none; padding: 12px; border-radius: 8px; font-size: 1rem;
+      font-weight: 600; cursor: pointer;
+    }
+    button:disabled { background-color: #333; color: #777; cursor: not-allowed; }
+    #status-message { margin-top: 15px; font-size: 0.9rem; text-align: center; }
+    .hidden-field { display: none !important; }
+    #submit-btn { background-color: #389838; color: #ffffff; }
+
+    /* --- Answer Cards --- */
+    .qa-card {
+      background-color: rgba(5, 5, 5, 0.5);
+      border-radius: 8px;
+      backdrop-filter: blur(8px);
+      -webkit-backdrop-filter: blur(8px);
+      padding: 16px;
+    }
+
+    .question-text {
+      color: #fff;
+      font-weight: 600;
+      margin-bottom: 8px;
+      font-size: 0.95rem;
+      overflow-wrap: anywhere;
+    }
+
+    /* Flex layout maps answer to left and date to right seamlessly */
+    .answer-text {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-end;
+      gap: 15px;
+      color: #b0b0b0;
+      font-size: 0.95rem;
+      line-height: 1.4;
+      padding-left: 12px;
+      border-left: 2px solid #555;
+      overflow-wrap: anywhere;
+    }
+
+    /* Muted timestamp inline block */
+    .qa-time {
+      font-size: 0.75rem;
+      color: #666;
+      font-family: monospace;
+      white-space: nowrap; /* Forces date string to stay strictly on one layout line */
+    }
+
+    /* --- Right Column (Feed Area) --- */
+    .feed-container {
+      width: 100%;
+    }
+
+    .feed-title {
+      font-size: 1.2rem;
+      font-weight: 600;
+      margin-bottom: 15px;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+      padding-bottom: 8px;
+    }
+
+    .feed-scroll-box {
+      width: 100%;
+    }
+
+    .qa-feed {
+      display: flex;
+      flex-direction: column;
+      gap: 30px;
+    }
+
+    /* Hidden by default on mobile devices */
+    .vertical-divider {
+      display: none;
+    }
+
+    /* --- DESKTOP VIEW --- */
+    @media (min-width: 850px) {
+      .app-layout {
+        flex-direction: row;
+        align-items: flex-start;
+        gap: 0;
+      }
+
+      .sidebar-container {
+        width: 400px;
+        position: -webkit-sticky;
+        position: sticky;
+        top: 40px;
+        min-height: calc(100vh - 80px);
+        display: flex;
+        flex-direction: column;
+        justify-content: flex-start;
+        align-items: stretch;
+        padding-top: 60px;
+        background-color: transparent;
+        border: none;
+        backdrop-filter: none;
+        -webkit-backdrop-filter: none;
+      }
+
+      .form-card {
+        margin-top: 200px;
+      }
+
+      /* --- THE DESKTOP GRADIENT DIVIDER --- */
+      .vertical-divider {
+        display: block;
+        width: 1px;
+        height: calc(100vh - 80px);
+        position: -webkit-sticky;
+        position: sticky;
+        top: 40px;
+        margin: 0 40px;
+        background: linear-gradient(
+          to bottom,
+          rgba(255, 255, 255, 0) 0%,
+          rgba(255, 255, 255, 0.25) 50%,
+          rgba(255, 255, 255, 0) 100%
+        );
+      }
+
+      .feed-container {
+        flex: 1;
+        position: -webkit-sticky;
+        position: sticky;
+        top: 40px;
+        padding-top: 60px;
+        box-sizing: border-box;
+      }
+
+      .feed-scroll-box {
+        max-height: calc(100vh - 180px);
+        overflow-y: auto;
+        padding-top: 10px;
+        padding-bottom: 40px;
+        box-sizing: border-box;
+
+        scrollbar-width: none;
+        -ms-overflow-style: none;
+      }
+
+      .feed-scroll-box::-webkit-scrollbar {
+        display: none !important;
+        width: 0 !important;
+        height: 0 !important;
+      }
+    }
+  </style>
+</head>
+<body>
+
+<div class="app-layout">
+  <div class="sidebar-container">
+    <div class="form-card">
+      <h1>Drop a message...</h1>
+      <p><i>Leave a message, statement or secret anonymously. <br> I'll try to answer when I can!</i></p>
+
+      <input type="text" id="username_hp" class="hidden-field" tabindex="-1" autocomplete="off">
+      <textarea id="question-input" placeholder="Type your message or question here..." maxlength="300"></textarea>
+      <button id="submit-btn" onclick="submitQuestion()">Submit Question</button>
+      <div id="status-message"></div>
+    </div>
+  </div>
+
+  <div class="vertical-divider"></div>
+
+  <div class="feed-container">
+    <div class="feed-title">zzMuffins' Responses...</div>
+
+    <div class="feed-scroll-box">
+      <div class="qa-feed" id="qa-feed">Loading answers...</div>
+    </div>
+  </div>
+</div>
+
+<script>
+  // --- CONFIG ---
+  const SPREADSHEET_ID = "10wYAPk1b0IedZ8EApX7eQGEq-WoFk8uAIrUV-TRFx7s";
+  const SHEETS_URL = `https://docs.google.com/spreadsheets/d/${SPREADSHEET_ID}/gviz/tq?tqx=out:csv`;
+  const GOOGLE_FORM_URL = "https://docs.google.com/forms/d/e/1FAIpQLScB1Y9hao2ySuZvz1lHeQpKW7onTEjkfa5zBdjQo4lTE-s0nA/formResponse";
+  const ENTRY_ID = "entry.1637793584";
+  const COOLDOWN_MS = 10000;
+
+  // Robust CSV parser to handle quotes, commas, and long strings safely
+  function parseCSVLine(text) {
+    let p = '', c = [], r = [];
+    let q = false;
+    for (let i = 0; i < text.length; i++) {
+      let ch = text.charAt(i);
+      if (ch === '"') {
+        q = !q;
+      } else if (ch === ',' && !q) {
+        r.push(c.join('').trim());
+        c = [];
+      } else {
+        c.push(ch);
+      }
+    }
+    r.push(c.join('').trim());
+    return r;
+  }
+
+  async function loadAnswers() {
+    const feedContainer = document.getElementById("qa-feed");
+    try {
+      const response = await fetch(SHEETS_URL);
+      if (!response.ok) throw new Error("Failed to fetch sheet");
+
+      const data = await response.text();
+      const rows = data.split(/\r?\n/);
+      feedContainer.innerHTML = "";
+
+      let answeredCount = 0;
+
+      for (let i = rows.length - 1; i > 0; i--) {
+        if (!rows[i]) continue;
+
+        // Use the robust parser instead of the fragile regex split
+        const columns = parseCSVLine(rows[i]);
+
+        const timestamp = columns[0];
+        const question = columns[1];
+        const answer = columns[2];
+
+        if (answer && answer !== '""' && answer.length > 0) {
+          answeredCount++;
+
+          const card = document.createElement("div");
+          card.className = "qa-card";
+
+          const qDiv = document.createElement("div");
+          qDiv.className = "question-text";
+          qDiv.textContent = "Q: " + question;
+          card.appendChild(qDiv);
+
+          const aDiv = document.createElement("div");
+          aDiv.className = "answer-text";
+
+          const textBlock = document.createElement("div");
+          textBlock.style.flex = "1";
+          textBlock.style.overflowWrap = "anywhere";
+          textBlock.textContent = answer;
+          aDiv.appendChild(textBlock);
+
+          if (timestamp) {
+            const timeDiv = document.createElement("div");
+            timeDiv.className = "qa-time";
+            timeDiv.textContent = timestamp;
+            aDiv.appendChild(timeDiv);
+          }
+
+          card.appendChild(aDiv);
+          feedContainer.appendChild(card);
+        }
+      }
+
+      if (answeredCount === 0) {
+        feedContainer.innerHTML = "<p style='text-align:center;'>No questions answered yet!</p>";
+      }
+
+    } catch (err) {
+      console.error("Sheets parser error:", err);
+      feedContainer.innerHTML = "<p style='color:#ff6b6b; text-align:center;'>Failed to load feed.</p>";
+    }
+  }
+
+  loadAnswers();
+
+  // --- SUBMIT LOGIC ---
+  async function submitQuestion() {
+    const inputField = document.getElementById("question-input");
+    const submitBtn = document.getElementById("submit-btn");
+    const statusMsg = document.getElementById("status-message");
+    const honeypot = document.getElementById("username_hp");
+    const questionText = inputField.value.trim();
+
+    if (!questionText) { statusMsg.style.color = "#ff6b6b"; statusMsg.textContent = "Please type something first!"; return; }
+    if (honeypot.value !== "") return;
+
+    const lastSubmit = localStorage.getItem("last_qa_submit");
+    const now = Date.now();
+    if (lastSubmit) {
+      const timePassed = now - parseInt(lastSubmit);
+      if (timePassed < COOLDOWN_MS) {
+        const remaining = Math.ceil((COOLDOWN_MS - timePassed) / 1000);
+        statusMsg.style.color = "#ff6b6b";
+        statusMsg.textContent = `Slow down! Wait ${remaining}s.`;
+        return;
+      }
+    }
+
+    submitBtn.disabled = true;
+    statusMsg.style.color = "#888"; statusMsg.textContent = "Sending question ...";
+
+    const formData = new FormData();
+    formData.append(ENTRY_ID, questionText);
+
+    try {
+      await fetch(GOOGLE_FORM_URL, { method: "POST", mode: "no-cors", body: formData });
+      localStorage.setItem("last_qa_submit", Date.now().toString());
+      inputField.value = "";
+      statusMsg.style.color = "#4cd137";
+      statusMsg.textContent = "Sent! It'll show below when answered...";
+    } catch (error) {
+      statusMsg.style.color = "#ff6b6b"; statusMsg.textContent = "Error sending. Try again..?";
+    } finally {
+      submitBtn.disabled = false;
+    }
+  }
+</script>
+
+</body>
+</html>
