@@ -228,7 +228,7 @@
 
       <input type="text" id="username_hp" class="hidden-field" tabindex="-1" autocomplete="off">
       <textarea id="question-input" placeholder="Type your message or question here..." maxlength="300"></textarea>
-      <button id="submit-btn" onclick="submitQuestion()">Submit Question</button>
+      <button id="submit-btn" onclick="submitQuestion()">Submit Message</button>
       <div id="status-message"></div>
     </div>
   </div>
@@ -361,7 +361,7 @@
     }
 
     submitBtn.disabled = true;
-    statusMsg.style.color = "#888"; statusMsg.textContent = "Sending question ...";
+    statusMsg.style.color = "#888"; statusMsg.textContent = "Sending message ...";
 
     const formData = new FormData();
     formData.append(ENTRY_ID, questionText);
