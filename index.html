@@ -252,23 +252,31 @@
   const ENTRY_ID = "entry.1637793584";
   const COOLDOWN_MS = 10000;
 
-  // Robust CSV parser to handle quotes, commas, and long strings safely
-  function parseCSVLine(text) {
-    let p = '', c = [], r = [];
-    let q = false;
+  // Universal CSV parser that handles newlines, commas, and quotes inside cells
+  function parseCSV(text) {
+    let rows = [];
+    let row = [''];
+    let inQuotes = false;
+
     for (let i = 0; i < text.length; i++) {
-      let ch = text.charAt(i);
-      if (ch === '"') {
-        q = !q;
-      } else if (ch === ',' && !q) {
-        r.push(c.join('').trim());
-        c = [];
+      let c = text[i];
+      let next = text[i + 1];
+
+      if (c === '"') {
+        if (inQuotes && next === '"') { row[row.length - 1] += '"'; i++; }
+        else { inQuotes = !inQuotes; }
+      } else if (c === ',' && !inQuotes) {
+        row.push('');
+      } else if ((c === '\r' || c === '\n') && !inQuotes) {
+        if (c === '\r' && next === '\n') { i++; }
+        if (row.length > 1 || row[0] !== '') rows.push(row);
+        row = [''];
       } else {
-        c.push(ch);
+        row[row.length - 1] += c;
       }
     }
-    r.push(c.join('').trim());
-    return r;
+    if (row.length > 1 || row[0] !== '') rows.push(row);
+    return rows;
   }
 
   async function loadAnswers() {
@@ -278,22 +286,21 @@
       if (!response.ok) throw new Error("Failed to fetch sheet");
 
       const data = await response.text();
-      const rows = data.split(/\r?\n/);
+      const rows = parseCSV(data);
       feedContainer.innerHTML = "";
 
       let answeredCount = 0;
 
+      // Iterate backwards from the last row down to row 1 (skipping headers at index 0)
       for (let i = rows.length - 1; i > 0; i--) {
-        if (!rows[i]) continue;
+        const columns = rows[i];
+        if (!columns || columns.length < 3) continue;
 
-        // Use the robust parser instead of the fragile regex split
-        const columns = parseCSVLine(rows[i]);
+        const timestamp = columns[0] ? columns[0].trim() : "";
+        const question = columns[1] ? columns[1].trim() : "";
+        const answer = columns[2] ? columns[2].trim() : "";
 
-        const timestamp = columns[0];
-        const question = columns[1];
-        const answer = columns[2];
-
-        if (answer && answer !== '""' && answer.length > 0) {
+        if (answer && answer.length > 0) {
           answeredCount++;
 
           const card = document.createElement("div");
@@ -301,7 +308,7 @@
 
           const qDiv = document.createElement("div");
           qDiv.className = "question-text";
-          qDiv.textContent = "" + question;
+          qDiv.textContent = question;
           card.appendChild(qDiv);
 
           const aDiv = document.createElement("div");
@@ -334,7 +341,7 @@
       feedContainer.innerHTML = "<p style='color:#ff6b6b; text-align:center;'>Failed to load feed.</p>";
     }
   }
-
+  
   loadAnswers();
 
   // --- SUBMIT LOGIC ---
