@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="icon" type="image/x-icon" href="img/favicon.ico">
+  <link rel="stylesheet" href="css/global.css">
+  <link rel="stylesheet" href="css/landing.css">
+  <link rel="stylesheet" href="css/qa.css">
+
+  <title>Message zzMuffins</title>
+</head>
+
+<body>
+<div class="app-layout">
+  <div class="sidebar-container">
+    <div class="form-card">
+      <a href="index.html" class="back-link">
+        ← Back
+      </a>
+
+      <h1>Drop a message...</h1>
+      <p><i>Leave a message, statement or secret anonymously. <br> I'll try to answer when I can!</i></p>
+
+      <input type="text" id="username_hp" class="hidden-field" tabindex="-1" autocomplete="off" aria-label="Honeypot">
+      <textarea id="question-input" placeholder="Type your message or question here..." maxlength="300" aria-label="Your Question Here"></textarea>
+      <button id="submit-btn" onclick="submitQuestion()">Submit Message</button>
+      <div id="status-message"></div>
+    </div>
+  </div>
+
+  <div class="vertical-divider"></div>
+
+  <div class="feed-container">
+    <div class="feed-title">zzMuffins' Responses...</div>
+
+    <div class="feed-scroll-box">
+      <div class="qa-feed" id="qa-feed">Loading answers...</div>
+    </div>
+  </div>
+</div>
+<script src="js/message.js"></script>
+</body>
+</html>

@@ -1,0 +1,65 @@
+@font-face {
+    font-family: 'AlbertSans';
+    src: url('../fonts/albertsans.ttf') format('truetype');
+    font-weight: normal;
+    font-style: normal;
+    font-display: swap; /* Keeps text visible while loading */
+}
+
+@font-face {
+    font-family: 'Bebas';
+    src: url('../fonts/bebas.ttf') format('truetype');
+    font-weight: normal;
+    font-style: normal;
+    font-display: swap; /* Keeps text visible while loading */
+}
+
+html {
+    overflow: hidden;
+    height: 100vh;
+    background: rgba(0, 0, 0, 0.8);
+}
+
+body {
+    background-image: linear-gradient(rgba(0, 0, 0, 0.4), #000000), url('../img/background.jpg');
+    background-size: cover;
+    background-position: top center;
+    background-repeat: no-repeat;
+    background-attachment: fixed;
+    color: #e0e0e0;
+    font-family: 'Bebas', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    height: 100vh;
+    overflow: hidden;
+    margin: 0;
+    padding: 40px 20px;
+    box-sizing: border-box;
+}
+
+input, textarea, button {
+    font-family: inherit;
+}
+
+h1 { font-size: 1.8rem; margin-bottom: 10px; font-weight: 600; }
+p { color: #ababab; font-size: 0.95rem; margin-bottom: 20px; }
+
+.hidden-field { display: none !important; }
+
+.back-link {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    color: #888;
+    text-decoration: none;
+    font-size: 0.85rem;
+    font-weight: 500;
+    margin-bottom: 16px;
+    transition: color 0.2s ease, transform 0.2s ease;
+}
+
+.back-link:hover {
+    color: #fff;
+    transform: translateX(-3px);
+}
